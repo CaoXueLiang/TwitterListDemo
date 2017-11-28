@@ -75,6 +75,7 @@
 #define kWBCellInnerViewColor UIColorHex(f7f7f7)   // Cell内部卡片灰色
 #define kWBCellInnerViewHighlightColor  UIColorHex(f0f0f0) // Cell内部卡片高亮时灰色
 #define kWBCellLineColor [UIColor colorWithWhite:0.000 alpha:0.09] //线条颜色
+#define RGBMAIN    [UIColor colorWithRed:(93 / 255.0) green:(174 / 255.0) blue:(33 / 255.0) alpha:1]//主颜色
 
 #define kWBLinkHrefName @"href" //NSString
 #define kWBLinkURLName @"url" //WBURL

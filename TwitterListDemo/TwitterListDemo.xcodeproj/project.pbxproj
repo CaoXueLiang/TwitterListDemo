@@ -105,13 +105,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		5848B8C31FCCF7DB00757570 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
 		5848B8C41FCCF89A00757570 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				5848B8C41FCCF89A00757570 /* Helper */,
-				5848B8C31FCCF7DB00757570 /* Controller */,
 				5848B8C21FCCF7D800757570 /* View */,
 				5848B8C11FCCF7D400757570 /* Model */,
 				C304729B1FCC5D1500A2BC25 /* AppDelegate.h */,
@@ -251,13 +243,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TwitterListDemo-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		500E125E095B63A39F80B42C /* [CP] Embed Pods Frameworks */ = {
@@ -440,7 +435,7 @@
 				DEVELOPMENT_TEAM = 49YMBTW8W3;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/bjovov/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/caoxueliang/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = TwitterListDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -459,7 +454,7 @@
 				DEVELOPMENT_TEAM = 49YMBTW8W3;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/bjovov/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/caoxueliang/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = TwitterListDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

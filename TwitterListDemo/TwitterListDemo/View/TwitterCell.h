@@ -11,7 +11,7 @@
 #import <YYText/YYText.h>
 
 /**用户信息View*/
-@class TwitterCell,TwitterLayouts,TwitterModel;
+@class TwitterCell,MLTweetLayouts,MLTweetModel,TweetCommentModel;
 @interface TwitterProfileView : UIView
 @property (nonatomic,strong) UIImageView *avatarView;
 @property (nonatomic,strong) YYLabel *nameLabel;
@@ -70,7 +70,7 @@
 @property (nonatomic,strong) TwitterToolbarView *toolbarView; //工具栏
 @property (nonatomic,strong) UIButton *menuButton;            //菜单栏
 @property (nonatomic,strong) YYLabel *timeLabel;              //发布时间
-@property (nonatomic,strong) TwitterLayouts *layout;          //布局
+@property (nonatomic,strong) MLTweetLayouts *layout;          //布局
 @property (nonatomic,weak)   TwitterCell *cell;               //自身cell
 @end
 
@@ -80,7 +80,7 @@
 @interface TwitterCell : YYTableViewCell
 @property (nonatomic,weak)   id<TwitterCellDelegate> delegate;
 @property (nonatomic,strong) TwitterView *statusView;
-- (void)setLayout:(TwitterLayouts *)layout;
+- (void)setLayout:(MLTweetLayouts *)layout;
 @end
 
 
@@ -110,7 +110,7 @@
 - (void)cellDidClickedLikedUser:(TwitterCell *)userModel;
 
 ///点击了评论的昵称
-- (void)cellDidClickedCommentUser:(TwitterCell *)userModel;
+- (void)cellDidClickedCommentUser:(TweetCommentModel *)userModel;
 
 ///点击了回复人的昵称
 - (void)cellDidClickedReplyUser:(NSString *)memberId;
@@ -128,7 +128,7 @@
 - (void)cellDidClickLike:(TwitterCell *)cell;
 
 ///点击了用户
-- (void)cell:(TwitterCell *)cell didClickUser:(TwitterModel *)user;
+- (void)cell:(TwitterCell *)cell didClickUser:(MLTweetModel *)user;
 
 ///点击了图片
 - (void)cell:(TwitterCell *)cell didClickImageAtIndex:(NSUInteger)index;

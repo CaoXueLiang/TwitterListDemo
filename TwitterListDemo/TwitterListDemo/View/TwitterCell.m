@@ -7,8 +7,11 @@
 //
 
 #import "TwitterCell.h"
-#import "TwitterCommentCell.h"
-#import "MLTweetModel.h"
+#import "MLTweetCommentCell.h"
+#import "MLTweetLayouts.h"
+#import "YYControl.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIButton+WebCache.h>
 
 #pragma mark - 个人信息
 /**
@@ -70,13 +73,13 @@
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    if (!_trackingTouch) {
-//        [super touchesEnded:touches withEvent:event];
-//    }else{
-//        if ([_cell.delegate respondsToSelector:@selector(cell: didClickUser:)]) {
-//            [_cell.delegate cell:_cell didClickUser:_cell.statusView.layout.tweetModel];
-//        }
-//    }
+    if (!_trackingTouch) {
+        [super touchesEnded:touches withEvent:event];
+    }else{
+        if ([_cell.delegate respondsToSelector:@selector(cell: didClickUser:)]) {
+            [_cell.delegate cell:_cell didClickUser:_cell.statusView.layout.tweetModel];
+        }
+    }
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -230,9 +233,29 @@
     return self;
 }
 
-//- (void)setWithLayout:(MLTweetLayouts *)layout{
-//    
-//}
+- (void)setWithLayout:(MLTweetLayouts *)layout{
+    _repostLabel.width = layout.toolbarRepostTextWidth;
+    _commentLabel.width = layout.toolbarCommentTextWidth;
+    _likeLabel.width = layout.toolbarLikeTextWidth;
+    
+    _repostLabel.textLayout = layout.toolbarRepostTextLayout;
+    _commentLabel.textLayout = layout.toolbarCommentTextLayout;
+    _likeLabel.textLayout = layout.toolbarLikeTextLayout;
+    
+    [self adjustImage:_repostImageView label:_repostLabel inButton:_repostButton];
+    [self adjustImage:_commentImageView label:_commentLabel inButton:_commentButton];
+    [self adjustImage:_likeImageView label:_likeLabel inButton:_likeButton];
+    _repostImageView.image = [layout.tweetModel.is_like isEqualToString:@"Y"] ? [UIImage imageNamed:@"praised_icon"] : [UIImage imageNamed:@"unLiked"];
+}
+
+- (void)adjustImage:(UIImageView *)image label:(YYLabel *)label inButton:(UIButton *)button{
+    CGFloat imageWidth = image.bounds.size.width;
+    CGFloat labelWidth = label.width;
+    CGFloat paddingMid = 5;
+    CGFloat paddingSide = (button.width - imageWidth - labelWidth - paddingMid) / 2.0;
+    image.centerX = CGFloatPixelRound(paddingSide + imageWidth / 2.0);
+    label.right = CGFloatPixelRound(button.width - paddingSide);
+}
 
 @end
 
@@ -263,7 +286,7 @@
     _commentTable.origin = CGPointMake(0, 0);
     _commentTable.top = _likeUsersLabel.bottom;
     _commentTable.backgroundColor = [UIColor clearColor];
-    [_commentTable registerClass:[TwitterCommentCell class] forCellReuseIdentifier:@"TwitterCommentCell"];
+    [_commentTable registerClass:[MLTweetCommentCell class] forCellReuseIdentifier:@"MLTweetCommentCell"];
     _commentTable.dataSource = self;
     _commentTable.delegate = self;
     [self addSubview:_commentTable];
@@ -290,28 +313,22 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    TweetCommentModel *model;
-    if (self.commentArray.count > 0) {
-        model  = self.commentArray[indexPath.row];
-    }
-    
-    @weakify(self);
+    TweetCommentModel *model = self.commentArray.count > 0 ? self.commentArray[indexPath.row] : nil;
     MLTweetCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MLTweetCommentCell" forIndexPath:indexPath];
     cell.commentModel = model;
     
     //点击评论昵称
+    @weakify(self);
     cell.DidClickedUserName = ^(TweetCommentModel *commentModel){
-        MLTweetCell *cell = weak_self.cell;
-        if ([cell.delegate respondsToSelector:@selector(cellDidClickedCommentUser:)]) {
-            [cell.delegate cellDidClickedCommentUser:commentModel];
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickedCommentUser:)]) {
+            [weak_self.cell.delegate cellDidClickedCommentUser:commentModel];
         }
     };
     
     //点击回复用户的昵称
     cell.DidClickedReplyUserName = ^(NSString *member_id){
-        MLTweetCell *cell = weak_self.cell;
-        if ([cell.delegate respondsToSelector:@selector(cellDidClickedReplyUser:)]) {
-            [cell.delegate cellDidClickedReplyUser:member_id];
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickedReplyUser:)]) {
+            [weak_self.cell.delegate cellDidClickedReplyUser:member_id];
         }
     };
     
@@ -323,6 +340,180 @@
     };
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    TweetCommentModel *model = self.commentArray.count > 0 ? self.commentArray[indexPath.row] : nil;
+    return [MLTweetCommentCell cellHeightWithModel:model];
+}
+
+- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+    if (action == @selector(copy:)) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+    if (action == @selector(copy:)) {
+        TweetCommentModel *model;
+        if (self.commentArray.count > 0) {
+            model  = self.commentArray[indexPath.row];
+        }
+        [UIPasteboard generalPasteboard].string = model.comment;
+    }
+}
+
+@end
+
+#pragma mark - TwitterView
+@implementation TwitterView
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (frame.size.width == 0 && frame.size.height == 0) {
+        frame.size.width = kScreenWidth;
+        frame.size.height = 1;
+    }
+    self = [super initWithFrame:frame];
+    self.backgroundColor = [UIColor clearColor];
+    self.exclusiveTouch = YES;
+    
+    @weakify(self);
+    _contentView = [UIView new];
+    _contentView.width = kScreenWidth;
+    _contentView.height = 1;
+    _contentView.backgroundColor = [UIColor whiteColor];
+    [self addSubview:_contentView];
+    
+    _profileView = [TwitterProfileView new];
+    [_contentView addSubview:_profileView];
+    
+    _menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _menuButton.size = CGSizeMake(30, 30);
+    [_menuButton setImage:[UIImage imageNamed:@"timeline_icon_more"] forState:UIControlStateNormal];
+    [_menuButton setImage:[UIImage imageNamed:@"timeline_icon_more_highlighted"] forState:UIControlStateHighlighted];
+    _menuButton.centerX = self.width - 20;
+    _menuButton.centerY = 18;
+    [_menuButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id sender) {
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickMenu:)]) {
+            [weak_self.cell.delegate cellDidClickMenu:weak_self.cell];
+        }
+    }];
+    [_contentView addSubview:_menuButton];
+    
+    _timeLabel = [YYLabel new];
+    _timeLabel.size = CGSizeMake(80, 24);
+    _timeLabel.right = self.width - 20 - 15;
+    _timeLabel.centerY = 18;
+    [_contentView addSubview:_timeLabel];
+    
+    _textLabel = [YYLabel new];
+    _textLabel.left = kWBCellPadding + 40 + kWBCellNamePaddingLeft;
+    _textLabel.width = kWBCellContentWidth;
+    _textLabel.highlightTapAction = ^(UIView *containerView, NSAttributedString *text, NSRange range, CGRect rect) {
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cell:didClickInLabel:textRange:)]) {
+            [weak_self.cell.delegate cell:weak_self.cell didClickInLabel:(YYLabel *)containerView textRange:range];
+        }
+    };
+    [_contentView addSubview:_textLabel];
+    
+    _expendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _expendButton.size = CGSizeMake(KWBExpendButtonWidth, KWBExpendButtonHeight);
+    _expendButton.left = kWBCellPadding +  40 + kWBCellNamePaddingLeft;
+    [_expendButton setTitleColor:RGBMAIN forState:UIControlStateNormal];
+    _expendButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    [_expendButton setImage:[UIImage imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+    [_expendButton setImage:[UIImage imageWithColor:[UIColor lightGrayColor]] forState:UIControlStateHighlighted];
+    [_expendButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id sender) {
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickExpendButton:)]) {
+            [weak_self.cell.delegate cellDidClickExpendButton:weak_self.cell];
+        }
+    }];
+    [_contentView addSubview:_expendButton];
+    
+    NSMutableArray *picViews = [NSMutableArray array];
+    for (int i = 0; i < 9; i++) {
+        YYControl *imageView = [YYControl new];
+        imageView.size = CGSizeMake(100, 100);
+        imageView.hidden = YES;
+        imageView.clipsToBounds = YES;
+        imageView.backgroundColor = kWBCellHighlightColor;
+        imageView.exclusiveTouch = YES;
+        imageView.touchBlock = ^(YYControl *view, YYGestureRecognizerState state, NSSet *touches, UIEvent *event) {
+            if (![weak_self.cell.delegate respondsToSelector:@selector(cell:didClickImageAtIndex:)])
+               return;
+            if (state == YYGestureRecognizerStateEnded) {
+                UITouch *touch = touches.anyObject;
+                CGPoint point = [touch locationInView:view];
+                if (CGRectContainsPoint(view.bounds, point)) {
+                    [weak_self.cell.delegate cell:weak_self.cell didClickImageAtIndex:i];
+                }
+            }
+        };
+        [picViews addObject:imageView];
+        [_contentView addSubview:imageView];
+    }
+    _picViews = picViews;
+    
+    _videoView = [TwitterVideoView new];
+    [_contentView addSubview:_videoView];
+    
+    _likeOrCommentView = [TwitterLikeOrCommentView new];
+    [_contentView addSubview:_likeOrCommentView];
+    
+    _toolbarView = [TwitterToolbarView new];
+    [_contentView addSubview:_toolbarView];
+    
+    return self;
+}
+
+- (void)setLayout:(MLTweetLayouts *)layout{
+    _layout = layout;
+    self.height = layout.totalHeight;
+    _contentView.top = layout.marginTop;
+    _contentView.height = layout.totalHeight - layout.marginTop - layout.marginBottom;
+    
+    CGFloat top = 0;
+    //布局个人信息
+    [_profileView.avatarView sd_setImageWithURL:[NSURL URLWithString:layout.tweetModel.avatar] placeholderImage:[UIImage imageNamed:@"80x80"]];
+    _profileView.nameLabel.textLayout = layout.nickNameTextLayout;
+    _profileView.locationLabel.textLayout = layout.locationTextLayout;
+    _profileView.height = layout.profileHeight;
+    _profileView.top = top;
+    top += layout.profileHeight;
+    _timeLabel.textLayout = layout.timeTextLayout;
+    
+    
+    //布局文本
+    _textLabel.top = top;
+    _textLabel.height = layout.textHeight;
+    _textLabel.textLayout = layout.textLayout;
+    top += layout.textHeight;
+    
+    
+    //布局展开收起按钮
+    if (layout.isShowExpendButton) {
+        _expendButton.hidden = NO;
+        _expendButton.top = top;
+        top +=KWBExpendButtonHeight + 8;
+        [_expendButton setTitle:layout.expendButtonTitle forState:UIControlStateNormal];
+    }else{
+        _expendButton.hidden = YES;
+    }
+    
+    //布局视频Video
+    if (layout.videoHeight == 0) {
+        _videoView.hidden = YES;
+    }else{
+        _videoView.hidden = NO;
+        TweetVideoModel *videoModel = layout.tweetModel.tweetVideoArray[0];
+        _videoView.top = top;
+        [_videoView.videoImageButton sd_setBackgroundImageWithURL:[NSURL URLWithString:videoModel.video_img] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"80x80"]];
+        top += layout.videoHeight;
+    }
 }
 
 @end

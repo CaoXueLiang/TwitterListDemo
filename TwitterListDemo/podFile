@@ -7,4 +7,5 @@ target 'TwitterListDemo' do
   pod 'YYModel'
   pod 'YYCategories'
   pod 'YYImage'
+  pod 'SDWebImage'
 end
