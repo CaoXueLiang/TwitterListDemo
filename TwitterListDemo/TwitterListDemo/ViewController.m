@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 @interface ViewController ()
-
+@property (nonatomic,strong) UITableView *myTable;
 @end
 
 @implementation ViewController
