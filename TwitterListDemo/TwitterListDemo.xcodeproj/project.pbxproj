@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		583B72C81FCD737500D6D66F /* EmoticonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B72C61FCD737500D6D66F /* EmoticonHelper.m */; };
+		583B72CB1FCD73A500D6D66F /* EmoticonGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B72C91FCD73A500D6D66F /* EmoticonGroup.m */; };
 		5848B8CB1FCCF8DD00757570 /* TwitterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8CA1FCCF8DD00757570 /* TwitterCell.m */; };
 		5848B8CC1FCCF90000757570 /* YYTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8C81FCCF8B200757570 /* YYTableView.m */; };
 		5848B8CD1FCCF90B00757570 /* YYTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8C61FCCF8B200757570 /* YYTableViewCell.m */; };
@@ -15,7 +17,6 @@
 		5848B8DA1FCD5DFB00757570 /* MLTweetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8D91FCD5DD000757570 /* MLTweetModel.m */; };
 		5848B8DD1FCD5E6400757570 /* MLTweetCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8DC1FCD5E6400757570 /* MLTweetCommentCell.m */; };
 		5848B8E01FCD5E8E00757570 /* MLTweetLayouts.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8DE1FCD5E8E00757570 /* MLTweetLayouts.m */; };
-		5848B8E31FCD61EE00757570 /* WBStatusHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8E21FCD61EE00757570 /* WBStatusHelper.m */; };
 		C304729D1FCC5D1500A2BC25 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C304729C1FCC5D1500A2BC25 /* AppDelegate.m */; };
 		C30472A01FCC5D1500A2BC25 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C304729F1FCC5D1500A2BC25 /* ViewController.m */; };
 		C30472A51FCC5D1500A2BC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C30472A41FCC5D1500A2BC25 /* Assets.xcassets */; };
@@ -25,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		583B72C61FCD737500D6D66F /* EmoticonHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmoticonHelper.m; sourceTree = "<group>"; };
+		583B72C71FCD737500D6D66F /* EmoticonHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmoticonHelper.h; sourceTree = "<group>"; };
+		583B72C91FCD73A500D6D66F /* EmoticonGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmoticonGroup.m; sourceTree = "<group>"; };
+		583B72CA1FCD73A500D6D66F /* EmoticonGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmoticonGroup.h; sourceTree = "<group>"; };
 		5848B8C51FCCF8B200757570 /* YYTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYTableViewCell.h; sourceTree = "<group>"; };
 		5848B8C61FCCF8B200757570 /* YYTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YYTableViewCell.m; sourceTree = "<group>"; };
 		5848B8C71FCCF8B200757570 /* YYTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYTableView.h; sourceTree = "<group>"; };
@@ -42,8 +47,6 @@
 		5848B8DC1FCD5E6400757570 /* MLTweetCommentCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLTweetCommentCell.m; sourceTree = "<group>"; };
 		5848B8DE1FCD5E8E00757570 /* MLTweetLayouts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLTweetLayouts.m; sourceTree = "<group>"; };
 		5848B8DF1FCD5E8E00757570 /* MLTweetLayouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLTweetLayouts.h; sourceTree = "<group>"; };
-		5848B8E11FCD61EE00757570 /* WBStatusHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WBStatusHelper.h; sourceTree = "<group>"; };
-		5848B8E21FCD61EE00757570 /* WBStatusHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WBStatusHelper.m; sourceTree = "<group>"; };
 		7075723821C8270678591023 /* libPods-TwitterListDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TwitterListDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFA9DAB3466BE2EF72DF335 /* Pods-TwitterListDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterListDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitterListDemo/Pods-TwitterListDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		B3460FB49D06FB8EE169EEAE /* Pods-TwitterListDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterListDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwitterListDemo/Pods-TwitterListDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -81,6 +84,8 @@
 		5848B8C11FCCF7D400757570 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				583B72CA1FCD73A500D6D66F /* EmoticonGroup.h */,
+				583B72C91FCD73A500D6D66F /* EmoticonGroup.m */,
 				5848B8DF1FCD5E8E00757570 /* MLTweetLayouts.h */,
 				5848B8DE1FCD5E8E00757570 /* MLTweetLayouts.m */,
 				5848B8D81FCD5DD000757570 /* MLTweetModel.h */,
@@ -110,8 +115,8 @@
 		5848B8C41FCCF89A00757570 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				5848B8E11FCD61EE00757570 /* WBStatusHelper.h */,
-				5848B8E21FCD61EE00757570 /* WBStatusHelper.m */,
+				583B72C71FCD737500D6D66F /* EmoticonHelper.h */,
+				583B72C61FCD737500D6D66F /* EmoticonHelper.m */,
 				5848B8CF1FCCF98100757570 /* YYControl.h */,
 				5848B8CE1FCCF98100757570 /* YYControl.m */,
 				5848B8C71FCCF8B200757570 /* YYTableView.h */,
@@ -292,13 +297,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5848B8E31FCD61EE00757570 /* WBStatusHelper.m in Sources */,
 				5848B8DD1FCD5E6400757570 /* MLTweetCommentCell.m in Sources */,
+				583B72C81FCD737500D6D66F /* EmoticonHelper.m in Sources */,
 				5848B8DA1FCD5DFB00757570 /* MLTweetModel.m in Sources */,
 				5848B8CD1FCCF90B00757570 /* YYTableViewCell.m in Sources */,
 				5848B8D41FCD0AA000757570 /* YYGestureRecognizer.m in Sources */,
 				5848B8CC1FCCF90000757570 /* YYTableView.m in Sources */,
 				C30472A01FCC5D1500A2BC25 /* ViewController.m in Sources */,
+				583B72CB1FCD73A500D6D66F /* EmoticonGroup.m in Sources */,
 				5848B8E01FCD5E8E00757570 /* MLTweetLayouts.m in Sources */,
 				C30472AB1FCC5D1500A2BC25 /* main.m in Sources */,
 				C304729D1FCC5D1500A2BC25 /* AppDelegate.m in Sources */,
