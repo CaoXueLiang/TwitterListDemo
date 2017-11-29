@@ -6,6 +6,6 @@ target 'TwitterListDemo' do
   pod 'YYText'
   pod 'YYModel'
   pod 'YYCategories'
-  pod 'YYImage'
   pod 'SDWebImage'
+  pod 'YYWebImage'
 end

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MLTweetModel.h"
-#import "WBStatusHelper.h"
+#import "EmoticonHelper.h"
 #import "YYText.h"
 
 /**

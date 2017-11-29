@@ -64,14 +64,14 @@
      NSMutableAttributedString *commentStr;
     if ([_commentModel.is_replay isEqualToString:@"N"]) {
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: ",_commentModel.nick_name]];
-        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotion];
+        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
         [commentStr appendAttributedString:emotionString];
         
         
     //回复的是用户
     }else if ([_commentModel.is_replay isEqualToString:@"Y"]){
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@回复%@: ",_commentModel.nick_name,_commentModel.re_nick_name]];
-        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotion];
+        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
         [commentStr appendAttributedString:emotionString];
     
     }
@@ -84,32 +84,7 @@
     if ([_commentModel.is_replay isEqualToString:@"Y"]){
       [commentStr yy_setColor:RGBMAIN range:NSMakeRange(_commentModel.nick_name.length + 2, _commentModel.re_nick_name.length)];
     }
-    
-    
-    // 匹配URL
-    // 高亮状态的背景
-    YYTextBorder *highlightBorder = [YYTextBorder new];
-    highlightBorder.insets = UIEdgeInsetsMake(-2, 0, -2, 0);
-    highlightBorder.cornerRadius = 3;
-    highlightBorder.fillColor = kWBCellTextHighlightBackgroundColor;
-    
-    NSArray *atResults = [[WBStatusHelper regexURL] matchesInString:commentStr.string options:kNilOptions range:commentStr.yy_rangeOfAll];
-    for (NSTextCheckingResult *at in atResults) {
-        if (at.range.location == NSNotFound && at.range.length <= 1) continue;
-        if ([commentStr yy_attribute:YYTextHighlightAttributeName atIndex:at.range.location] == nil) {
-            [commentStr yy_setColor:kWBCellTextHighlightColor range:at.range];
-            
-            // 高亮状态
-            YYTextHighlight *highlight = [YYTextHighlight new];
-            [highlight setBackgroundBorder:highlightBorder];
-            
-            // 数据信息，用于稍后用户点击
-            highlight.userInfo = @{kWBLinkURLName : [commentStr.string substringWithRange:NSMakeRange(at.range.location, at.range.length)]};
-            [commentStr yy_setTextHighlight:highlight range:at.range];
-    }
-  }
-    
-    
+ 
     //点击名字进入个人详情
     [commentStr yy_setTextHighlightRange:NSMakeRange(0, _commentModel.nick_name.length) color:RGBMAIN backgroundColor:[UIColor lightGrayColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
         
@@ -158,14 +133,14 @@
     NSMutableAttributedString *commentStr;
     if ([model.is_replay isEqualToString:@"N"]) {
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: ",model.nick_name]];
-        NSMutableAttributedString *emotionString = [model.comment convertToEmotion];
+        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
         [commentStr appendAttributedString:emotionString];
         
         
     //回复的是用户
     }else if ([model.is_replay isEqualToString:@"Y"]){
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@回复%@: ",model.nick_name,model.re_nick_name]];
-        NSMutableAttributedString *emotionString = [model.comment convertToEmotion];
+        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
         [commentStr appendAttributedString:emotionString];
         
     }

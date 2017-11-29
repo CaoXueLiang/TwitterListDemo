@@ -11,7 +11,9 @@
 
 #import <YYCategories/YYCategories.h>
 #import <YYModel/YYModel.h>
+#import <YYWebImage/YYWebImage.h>
 #import <YYImage/YYImage.h>
+#import "NSString+Emotion.h"
 
 // 邻里圈宽高宏定义
 #define KWBDetailTopMargin  15   //邻里圈详情顶部留白

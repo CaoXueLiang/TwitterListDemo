@@ -12,6 +12,7 @@
 #import "YYControl.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/UIButton+WebCache.h>
+#import "YYTableView.h"
 
 #pragma mark - 个人信息
 /**
@@ -279,9 +280,10 @@
     _likeUsersLabel = [YYLabel new];
     _likeUsersLabel.left = 8 + 20;
     _likeUsersLabel.width = kWBCellContentWidth - 8 - 10 - 20;
+    _likeUsersLabel.textVerticalAlignment = YYTextVerticalAlignmentTop;
     [self addSubview:_likeUsersLabel];
     
-    _commentTable = [UITableView new];
+    _commentTable = [YYTableView new];
     _commentTable.size = CGSizeMake(kWBCellContentWidth, 20);
     _commentTable.origin = CGPointMake(0, 0);
     _commentTable.top = _likeUsersLabel.bottom;
@@ -289,6 +291,7 @@
     [_commentTable registerClass:[MLTweetCommentCell class] forCellReuseIdentifier:@"MLTweetCommentCell"];
     _commentTable.dataSource = self;
     _commentTable.delegate = self;
+    _commentTable.scrollEnabled = NO;
     [self addSubview:_commentTable];
     
     _separateLayer = [CALayer layer];
@@ -386,6 +389,34 @@
     _contentView.width = kScreenWidth;
     _contentView.height = 1;
     _contentView.backgroundColor = [UIColor whiteColor];
+    static UIImage *topLineBG, *bottomLineBG;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        topLineBG = [UIImage imageWithSize:CGSizeMake(1, 3) drawBlock:^(CGContextRef context) {
+            CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+            CGContextSetShadowWithColor(context, CGSizeMake(0, 0), 0.8, [UIColor colorWithWhite:0 alpha:0.08].CGColor);
+            CGContextAddRect(context, CGRectMake(-2, 3, 4, 4));
+            CGContextFillPath(context);
+        }];
+        bottomLineBG = [UIImage imageWithSize:CGSizeMake(1, 3) drawBlock:^(CGContextRef context) {
+            CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+            CGContextSetShadowWithColor(context, CGSizeMake(0, 0.4), 2, [UIColor colorWithWhite:0 alpha:0.08].CGColor);
+            CGContextAddRect(context, CGRectMake(-2, -2, 4, 2));
+            CGContextFillPath(context);
+        }];
+    });
+    UIImageView *topLine = [[UIImageView alloc] initWithImage:topLineBG];
+    topLine.width = _contentView.width;
+    topLine.bottom = 0;
+    topLine.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [_contentView addSubview:topLine];
+    
+    
+    UIImageView *bottomLine = [[UIImageView alloc] initWithImage:bottomLineBG];
+    bottomLine.width = _contentView.width;
+    bottomLine.top = _contentView.height;
+    bottomLine.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [_contentView addSubview:bottomLine];
     [self addSubview:_contentView];
     
     _profileView = [TwitterProfileView new];
@@ -514,10 +545,172 @@
         [_videoView.videoImageButton sd_setBackgroundImageWithURL:[NSURL URLWithString:videoModel.video_img] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"80x80"]];
         top += layout.videoHeight;
     }
+    
+    //布局图片
+    if (layout.picHeight == 0) {
+        [self _hideImageViews];
+    }
+    
+    if (layout.picHeight > 0) {
+        //解决只有图片时，间距太紧的问题
+        if (_textLabel.height == 0) {
+            top = top + 8;
+        }
+        [self _setImageViewWithTop:top isRetweet:NO];
+    }
+    
+    //点击喜欢的名字的回调
+    @weakify(self);
+    layout.DidClickedLikeUser = ^(TweetLikeModel *likeModel){
+        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickedLikedUser:)]) {
+            [weak_self.cell.delegate cellDidClickedLikedUser:likeModel];
+        }
+    };
+    
+    
+    //布局喜欢和评论View
+    _likeOrCommentView.top = layout.totalHeight - layout.marginBottom - kWBCellToolbarHeight - kWBCellTopMargin - layout.commentHeight - layout.likeUserHeight - kWBCellPaddingText;
+    _likeOrCommentView.left = kWBCellPadding +  40 + kWBCellNamePaddingLeft;
+    _likeOrCommentView.width = kWBCellContentWidth;
+    _likeOrCommentView.height = layout.commentHeight + layout.likeUserHeight;
+    
+    _likeOrCommentView.likeUsersLabel.origin = CGPointMake(8 + 20, 0);
+    _likeOrCommentView.likeUsersLabel.height = layout.likeUserHeight;
+    _likeOrCommentView.likeUsersLabel.width = kWBCellContentWidth - 10 - 8 - 20;
+    _likeOrCommentView.likeUsersLabel.textLayout = layout.likeUserTextLayout;
+    
+    _likeOrCommentView.commentTable.height = layout.commentHeight;
+    _likeOrCommentView.commentTable.top = layout.likeUserHeight;
+    _likeOrCommentView.commentTable.width = kWBCellContentWidth;
+    _likeOrCommentView.commentTable.left = 0;
+    
+    _likeOrCommentView.commentArray = layout.tweetModel.commentArray;
+    _likeOrCommentView.likeUsersLabel.textLayout = layout.likeUserTextLayout;
+    _likeOrCommentView.likeBeginImageView.hidden = !layout.tweetModel.likesArray.count;
+    _likeOrCommentView.separateLayer.hidden = !layout.tweetModel.likesArray.count;
+    
+    _toolbarView.bottom = _contentView.height;
+    [_toolbarView setWithLayout:layout];
+}
+
+- (void)_hideImageViews {
+    for (UIImageView *imageView in _picViews) {
+        imageView.hidden = YES;
+    }
+}
+
+- (void)_setImageViewWithTop:(CGFloat)imageTop isRetweet:(BOOL)isRetweet{
+    CGSize picSize = _layout.picSize;
+    NSArray *pics = _layout.tweetModel.tweetPictureArray;
+    int picsCount = (int)pics.count;
+    
+    for (int i = 0; i < 9; i++) {
+        UIView *imageView = _picViews[i];
+        if (i >= picsCount) {
+            [imageView.layer yy_cancelCurrentImageRequest];
+            imageView.hidden = YES;
+        }else{
+            CGPoint origin = {0};
+            switch (picsCount) {
+                case 1:{
+                    origin.x = kWBCellPadding + 40 + kWBCellNamePaddingLeft;
+                    origin.y = imageTop;
+                }break;
+                case 4:{
+                    origin.x = kWBCellPadding + 40 + kWBCellNamePaddingLeft + (i % 2) * (picSize.width + kWBCellPaddingPic);
+                    origin.y = imageTop + (int)(i / 2) * (picSize.height + kWBCellPaddingPic);
+                }break;
+                default:{
+                    origin.x = kWBCellPadding + 40 + kWBCellNamePaddingLeft + (i % 3) * (picSize.width + kWBCellPaddingPic);
+                    origin.y = imageTop + (int)(i / 3) * (picSize.height + kWBCellPaddingPic);
+                }break;
+            }
+            imageView.frame = (CGRect){.origin = origin, .size = picSize};
+            imageView.hidden = NO;
+            [imageView.layer removeAnimationForKey:@"contents"];
+            TweetPictureModel *pic = pics[i];
+            
+            [imageView.layer yy_setImageWithURL:[NSURL URLWithString:pic.images_small]
+                                 placeholder:[UIImage imageNamed:@"80x80"]
+                                     options:YYWebImageOptionAvoidSetImage
+                                  completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+                    //@strongify(imageView);
+                    if (!imageView) return;
+                    if (image && stage == YYWebImageStageFinished) {
+                                          
+                      int width = pic.ico_width;
+                      int height = pic.ico_height;
+                      CGFloat scale = (height / width) / (imageView.height / imageView.width);
+                      if (scale < 0.99 || isnan(scale)) { // 宽图把左右两边裁掉
+                      imageView.contentMode = UIViewContentModeScaleAspectFill;
+                      imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1);
+                      } else { // 高图只保留顶部
+                        imageView.contentMode = UIViewContentModeScaleToFill;
+                        imageView.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
+                      }
+                                          
+                       ((YYControl *)imageView).image = image;
+                      if (from != YYWebImageFromMemoryCacheFast) {
+                          CATransition *transition = [CATransition animation];
+                          transition.duration = 0.15;
+                          transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                          transition.type = kCATransitionFade;
+                          [imageView.layer addAnimation:transition forKey:@"contents"];
+                      }
+                  }
+             }];
+         }
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [(_contentView) performSelector:@selector(setBackgroundColor:) withObject:kWBCellHighlightColor afterDelay:0.15];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self touchesRestoreBackgroundColor];
+    UITouch *touch = touches.anyObject;
+    CGPoint point = [touch locationInView:_timeLabel];
+    if (CGRectContainsPoint(_timeLabel.bounds, point)) {
+        if ([_cell.delegate respondsToSelector:@selector(cellDidClickMenu:)]) {
+            [_cell.delegate cellDidClickMenu:_cell];
+        }
+    }else{
+        if ([_cell.delegate respondsToSelector:@selector(cellDidClick:)]) {
+            [_cell.delegate cellDidClick:_cell];
+        }
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self touchesRestoreBackgroundColor];
+}
+
+- (void)touchesRestoreBackgroundColor {
+    [NSObject cancelPreviousPerformRequestsWithTarget:_contentView selector:@selector(setBackgroundColor:) object:kWBCellHighlightColor];
+    _contentView.backgroundColor = [UIColor whiteColor];
 }
 
 @end
 
+#pragma mark - TwitterCell
 @implementation TwitterCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    _statusView = [TwitterView new];
+    _statusView.cell = self;
+    _statusView.likeOrCommentView.cell = self;
+    _statusView.profileView.cell = self;
+    _statusView.toolbarView.cell = self;
+    _statusView.videoView.cell = self;
+    [self.contentView addSubview:_statusView];
+    return self;
+}
+
+- (void)setLayout:(MLTweetLayouts *)layout {
+    self.height = layout.totalHeight;
+    self.contentView.height = layout.totalHeight;
+    _statusView.layout = layout;
+}
 
 @end

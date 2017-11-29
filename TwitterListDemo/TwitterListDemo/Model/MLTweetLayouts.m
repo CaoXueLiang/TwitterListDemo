@@ -8,7 +8,6 @@
 
 #import "MLTweetLayouts.h"
 #import "MLTweetCommentCell.h"
-
 /*
  将每行的 baseline 位置固定下来，不受不同字体的 ascent/descent 影响。
  */
@@ -78,7 +77,7 @@
     _imageView = [UIImageView new];
     _imageView.size = _size;
     
-    [_imageView setImageWithURL:_imageURL placeholder:nil];
+    [_imageView yy_setImageWithURL:_imageURL placeholder:nil];
     return _imageView;
 }
 @end
@@ -483,14 +482,14 @@
     YYTextContainer *container = [YYTextContainer containerWithSize:CGSizeMake(kScreenWidth, kWBCellToolbarHeight)];
     container.maximumNumberOfRows = 1;
     
-    NSMutableAttributedString *likeText = [[NSMutableAttributedString alloc] initWithString:_tweetModel.likesArray.count <= 0 ? @"点赞" : [WBStatusHelper shortedNumberDesc:_tweetModel.likesArray.count]];
+    NSMutableAttributedString *likeText = [[NSMutableAttributedString alloc] initWithString:@"点赞"];
     likeText.yy_font = font;
     likeText.yy_color =  kWBCellToolbarTitleColor;
     _toolbarRepostTextLayout = [YYTextLayout layoutWithContainer:container text:likeText];
     _toolbarRepostTextWidth = CGFloatPixelRound(_toolbarRepostTextLayout.textBoundingRect.size.width);
     
     
-    NSMutableAttributedString *commentText = [[NSMutableAttributedString alloc] initWithString:[_tweetModel.comments intValue] <= 0 ? @"评论" : [WBStatusHelper shortedNumberDesc:[_tweetModel.comments intValue]]];
+    NSMutableAttributedString *commentText = [[NSMutableAttributedString alloc] initWithString:@"评论"];
     commentText.yy_font = font;
     commentText.yy_color = kWBCellToolbarTitleColor;
     _toolbarCommentTextLayout = [YYTextLayout layoutWithContainer:container text:commentText];
@@ -503,8 +502,6 @@
     _toolbarLikeTextLayout = [YYTextLayout layoutWithContainer:container text:repostText];
     _toolbarLikeTextWidth = CGFloatPixelRound(_toolbarLikeTextLayout.textBoundingRect.size.width);
 }
-
-
 
 - (NSMutableAttributedString *)_textWithStatus:(MLTweetModel *)status
                                      isRetweet:(BOOL)isRetweet
@@ -533,29 +530,28 @@
     highlightBorder.cornerRadius = 3;
     highlightBorder.fillColor = kWBCellTextHighlightBackgroundColor;
     
-    NSMutableAttributedString *text = [string convertToEmotion];
+    NSMutableAttributedString *text = [string convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
     
     text.yy_font = font;
     text.yy_color = textColor;
      
-     // 匹配URL
-     NSArray *atResults = [[WBStatusHelper regexURL] matchesInString:text.string options:kNilOptions range:text.yy_rangeOfAll];
-     for (NSTextCheckingResult *at in atResults) {
-     if (at.range.location == NSNotFound && at.range.length <= 1) continue;
-     if ([text yy_attribute:YYTextHighlightAttributeName atIndex:at.range.location] == nil) {
-     [text yy_setColor:kWBCellTextHighlightColor range:at.range];
-     
+//     // 匹配URL
+//     NSArray *atResults = [[WBStatusHelper regexURL] matchesInString:text.string options:kNilOptions range:text.yy_rangeOfAll];
+//     for (NSTextCheckingResult *at in atResults) {
+//     if (at.range.location == NSNotFound && at.range.length <= 1) continue;
+//     if ([text yy_attribute:YYTextHighlightAttributeName atIndex:at.range.location] == nil) {
+//     [text yy_setColor:kWBCellTextHighlightColor range:at.range];
+    
      // 高亮状态
      YYTextHighlight *highlight = [YYTextHighlight new];
      [highlight setBackgroundBorder:highlightBorder];
          
-     // 数据信息，用于稍后用户点击
-     highlight.userInfo = @{kWBLinkURLName : [text.string substringWithRange:NSMakeRange(at.range.location, at.range.length)]};
-     [text yy_setTextHighlight:highlight range:at.range];
-        
-    }
-  }
-
+//     // 数据信息，用于稍后用户点击
+//     highlight.userInfo = @{kWBLinkURLName : [text.string substringWithRange:NSMakeRange(at.range.location, at.range.length)]};
+//     [text yy_setTextHighlight:highlight range:at.range];
+//
+  //  }
+  //}
     return text;
 }
 
@@ -593,49 +589,6 @@
     [atr  yy_setTextAttachment:attachment range:NSMakeRange(0, atr.length)];
     CTRunDelegateRef ctDelegate = delegate.CTRunDelegate;
     [atr  yy_setRunDelegate:ctDelegate range:NSMakeRange(0, atr.length)];
-    if (ctDelegate) CFRelease(ctDelegate);
-    
-    return atr;
-}
-
-- (NSAttributedString *)_attachmentWithFontSize:(CGFloat)fontSize imageURL:(NSString *)imageURL shrink:(BOOL)shrink {
-    /*
-     微博 URL 嵌入的图片，比临近的字体要小一圈。。
-     这里模拟一下 Heiti SC 字体，然后把图片缩小一下。
-     */
-    CGFloat ascent = fontSize * 0.86;
-    CGFloat descent = fontSize * 0.14;
-    CGRect bounding = CGRectMake(0, -0.14 * fontSize, fontSize, fontSize);
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(ascent - (bounding.size.height + bounding.origin.y), 0, descent + bounding.origin.y, 0);
-    CGSize size = CGSizeMake(fontSize, fontSize);
-    
-    if (shrink) {
-        // 缩小~
-        CGFloat scale = 1 / 10.0;
-        contentInsets.top += fontSize * scale;
-        contentInsets.bottom += fontSize * scale;
-        contentInsets.left += fontSize * scale;
-        contentInsets.right += fontSize * scale;
-        contentInsets = UIEdgeInsetPixelFloor(contentInsets);
-        size = CGSizeMake(fontSize - fontSize * scale * 2, fontSize - fontSize * scale * 2);
-        size = CGSizePixelRound(size);
-    }
-    
-    YYTextRunDelegate *delegate = [YYTextRunDelegate new];
-    delegate.ascent = ascent;
-    delegate.descent = descent;
-    delegate.width = bounding.size.width;
-    
-    WBTextImageViewAttachment *attachment = [WBTextImageViewAttachment new];
-    attachment.contentMode = UIViewContentModeScaleAspectFit;
-    attachment.contentInsets = contentInsets;
-    attachment.size = size;
-    attachment.imageURL = [WBStatusHelper defaultURLForImageURL:imageURL];
-    
-    NSMutableAttributedString *atr = [[NSMutableAttributedString alloc] initWithString:YYTextAttachmentToken];
-    [atr yy_setTextAttachment:attachment range:NSMakeRange(0, atr.length)];
-    CTRunDelegateRef ctDelegate = delegate.CTRunDelegate;
-    [atr yy_setRunDelegate:ctDelegate range:NSMakeRange(0, atr.length)];
     if (ctDelegate) CFRelease(ctDelegate);
     
     return atr;

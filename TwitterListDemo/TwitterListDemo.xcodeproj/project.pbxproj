@@ -17,6 +17,10 @@
 		5848B8DA1FCD5DFB00757570 /* MLTweetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8D91FCD5DD000757570 /* MLTweetModel.m */; };
 		5848B8DD1FCD5E6400757570 /* MLTweetCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8DC1FCD5E6400757570 /* MLTweetCommentCell.m */; };
 		5848B8E01FCD5E8E00757570 /* MLTweetLayouts.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848B8DE1FCD5E8E00757570 /* MLTweetLayouts.m */; };
+		5869E3C31FCEA23B00204216 /* NSString+Emotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869E3C21FCEA23B00204216 /* NSString+Emotion.m */; };
+		5869E3C51FCEA89600204216 /* dynamic.json in Resources */ = {isa = PBXBuildFile; fileRef = 5869E3C41FCEA89500204216 /* dynamic.json */; };
+		5869E3C81FCEACCC00204216 /* EmoticonWeibo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5869E3C71FCEACCC00204216 /* EmoticonWeibo.bundle */; };
+		5869E3CA1FCEACF800204216 /* ResourceWeibo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5869E3C91FCEACF800204216 /* ResourceWeibo.bundle */; };
 		C304729D1FCC5D1500A2BC25 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C304729C1FCC5D1500A2BC25 /* AppDelegate.m */; };
 		C30472A01FCC5D1500A2BC25 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C304729F1FCC5D1500A2BC25 /* ViewController.m */; };
 		C30472A51FCC5D1500A2BC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C30472A41FCC5D1500A2BC25 /* Assets.xcassets */; };
@@ -47,6 +51,11 @@
 		5848B8DC1FCD5E6400757570 /* MLTweetCommentCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLTweetCommentCell.m; sourceTree = "<group>"; };
 		5848B8DE1FCD5E8E00757570 /* MLTweetLayouts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MLTweetLayouts.m; sourceTree = "<group>"; };
 		5848B8DF1FCD5E8E00757570 /* MLTweetLayouts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLTweetLayouts.h; sourceTree = "<group>"; };
+		5869E3C11FCEA23B00204216 /* NSString+Emotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Emotion.h"; sourceTree = "<group>"; };
+		5869E3C21FCEA23B00204216 /* NSString+Emotion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Emotion.m"; sourceTree = "<group>"; };
+		5869E3C41FCEA89500204216 /* dynamic.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dynamic.json; sourceTree = "<group>"; };
+		5869E3C71FCEACCC00204216 /* EmoticonWeibo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = EmoticonWeibo.bundle; sourceTree = "<group>"; };
+		5869E3C91FCEACF800204216 /* ResourceWeibo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ResourceWeibo.bundle; sourceTree = "<group>"; };
 		7075723821C8270678591023 /* libPods-TwitterListDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TwitterListDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EFA9DAB3466BE2EF72DF335 /* Pods-TwitterListDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterListDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitterListDemo/Pods-TwitterListDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		B3460FB49D06FB8EE169EEAE /* Pods-TwitterListDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterListDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwitterListDemo/Pods-TwitterListDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -118,8 +127,19 @@
 				5848B8C61FCCF8B200757570 /* YYTableViewCell.m */,
 				5848B8D21FCD0A9F00757570 /* YYGestureRecognizer.h */,
 				5848B8D31FCD0A9F00757570 /* YYGestureRecognizer.m */,
+				5869E3C11FCEA23B00204216 /* NSString+Emotion.h */,
+				5869E3C21FCEA23B00204216 /* NSString+Emotion.m */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		5869E3C61FCEACAF00204216 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5869E3C91FCEACF800204216 /* ResourceWeibo.bundle */,
+				5869E3C71FCEACCC00204216 /* EmoticonWeibo.bundle */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		C304728F1FCC5D1500A2BC25 = {
@@ -143,6 +163,8 @@
 		C304729A1FCC5D1500A2BC25 /* TwitterListDemo */ = {
 			isa = PBXGroup;
 			children = (
+				5869E3C61FCEACAF00204216 /* Resources */,
+				5869E3C41FCEA89500204216 /* dynamic.json */,
 				5848B8C41FCCF89A00757570 /* Helper */,
 				5848B8C21FCCF7D800757570 /* View */,
 				5848B8C11FCCF7D400757570 /* Model */,
@@ -229,6 +251,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5869E3C81FCEACCC00204216 /* EmoticonWeibo.bundle in Resources */,
+				5869E3C51FCEA89600204216 /* dynamic.json in Resources */,
+				5869E3CA1FCEACF800204216 /* ResourceWeibo.bundle in Resources */,
 				C30472A81FCC5D1500A2BC25 /* LaunchScreen.storyboard in Resources */,
 				C30472A51FCC5D1500A2BC25 /* Assets.xcassets in Resources */,
 			);
@@ -252,7 +277,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		500E125E095B63A39F80B42C /* [CP] Embed Pods Frameworks */ = {
@@ -293,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5848B8DD1FCD5E6400757570 /* MLTweetCommentCell.m in Sources */,
+				5869E3C31FCEA23B00204216 /* NSString+Emotion.m in Sources */,
 				583B72C81FCD737500D6D66F /* EmoticonHelper.m in Sources */,
 				5848B8DA1FCD5DFB00757570 /* MLTweetModel.m in Sources */,
 				5848B8CD1FCCF90B00757570 /* YYTableViewCell.m in Sources */,
@@ -435,7 +461,7 @@
 				DEVELOPMENT_TEAM = 49YMBTW8W3;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/caoxueliang/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/bjovov/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = TwitterListDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -454,7 +480,7 @@
 				DEVELOPMENT_TEAM = 49YMBTW8W3;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/caoxueliang/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/bjovov/TwitterListDemo/TwitterListDemo/TwitterListDemo/PrefixHeader.pch;
 				INFOPLIST_FILE = TwitterListDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
