@@ -163,14 +163,17 @@
     [_likeButton addSubview:_likeImageView];
     
     _repostLabel = [YYLabel new];
+    _repostLabel.userInteractionEnabled = NO;
     _repostLabel.height = self.height;
     [_repostButton addSubview:_repostLabel];
     
     _commentLabel = [YYLabel new];
+    _commentLabel.userInteractionEnabled = NO;
     _commentLabel.height = self.height;
     [_commentButton addSubview:_commentLabel];
     
     _likeLabel = [YYLabel new];
+    _likeLabel.userInteractionEnabled = NO;
     _likeLabel.height = self.height;
     [_likeButton addSubview:_likeLabel];
     
@@ -211,25 +214,10 @@
     [self.layer addSublayer:_line2];
     [self.layer addSublayer:_topLine];
     [self.layer addSublayer:_bottomLine];
-    
-    @weakify(self);
-    [_repostButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id  _Nonnull sender) {
-        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickRepost:)]) {
-            [weak_self.cell.delegate cellDidClickRepost:weak_self.cell];
-        }
-    }];
-    
-    [_commentButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id  _Nonnull sender) {
-        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickComment:)]) {
-            [weak_self.cell.delegate cellDidClickComment:weak_self.cell];
-        }
-    }];
-    
-    [_likeButton addBlockForControlEvents:UIControlEventTouchUpInside block:^(id  _Nonnull sender) {
-        if ([weak_self.cell.delegate respondsToSelector:@selector(cellDidClickLike:)]) {
-            [weak_self.cell.delegate cellDidClickLike:weak_self.cell];
-        }
-    }];
+
+    [_repostButton addTarget:self action:@selector(repostButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    [_commentButton addTarget:self action:@selector(commentButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    [_likeButton addTarget:self action:@selector(likeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     
     return self;
 }
@@ -256,6 +244,24 @@
     CGFloat paddingSide = (button.width - imageWidth - labelWidth - paddingMid) / 2.0;
     image.centerX = CGFloatPixelRound(paddingSide + imageWidth / 2.0);
     label.right = CGFloatPixelRound(button.width - paddingSide);
+}
+
+- (void)repostButtonClicked{
+    if ([_cell.delegate respondsToSelector:@selector(cellDidClickRepost:)]) {
+        [_cell.delegate cellDidClickRepost:_cell];
+    }
+}
+
+- (void)commentButtonClicked{
+    if ([_cell.delegate respondsToSelector:@selector(cellDidClickComment:)]) {
+        [_cell.delegate cellDidClickComment:_cell];
+    }
+}
+
+- (void)likeButtonClicked{
+    if ([_cell.delegate respondsToSelector:@selector(cellDidClickLike:)]) {
+        [_cell.delegate cellDidClickLike:_cell];
+    }
 }
 
 @end
@@ -389,34 +395,6 @@
     _contentView.width = kScreenWidth;
     _contentView.height = 1;
     _contentView.backgroundColor = [UIColor whiteColor];
-    static UIImage *topLineBG, *bottomLineBG;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        topLineBG = [UIImage imageWithSize:CGSizeMake(1, 3) drawBlock:^(CGContextRef context) {
-            CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
-            CGContextSetShadowWithColor(context, CGSizeMake(0, 0), 0.8, [UIColor colorWithWhite:0 alpha:0.08].CGColor);
-            CGContextAddRect(context, CGRectMake(-2, 3, 4, 4));
-            CGContextFillPath(context);
-        }];
-        bottomLineBG = [UIImage imageWithSize:CGSizeMake(1, 3) drawBlock:^(CGContextRef context) {
-            CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
-            CGContextSetShadowWithColor(context, CGSizeMake(0, 0.4), 2, [UIColor colorWithWhite:0 alpha:0.08].CGColor);
-            CGContextAddRect(context, CGRectMake(-2, -2, 4, 2));
-            CGContextFillPath(context);
-        }];
-    });
-    UIImageView *topLine = [[UIImageView alloc] initWithImage:topLineBG];
-    topLine.width = _contentView.width;
-    topLine.bottom = 0;
-    topLine.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [_contentView addSubview:topLine];
-    
-    
-    UIImageView *bottomLine = [[UIImageView alloc] initWithImage:bottomLineBG];
-    bottomLine.width = _contentView.width;
-    bottomLine.top = _contentView.height;
-    bottomLine.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [_contentView addSubview:bottomLine];
     [self addSubview:_contentView];
     
     _profileView = [TwitterProfileView new];
@@ -497,7 +475,7 @@
     
     _toolbarView = [TwitterToolbarView new];
     [_contentView addSubview:_toolbarView];
-    
+
     return self;
 }
 

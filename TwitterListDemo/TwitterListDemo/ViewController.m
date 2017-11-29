@@ -53,6 +53,87 @@
     return NO;
 }
 
+#pragma mark - Cell Delegate
+///点击了 Cell
+- (void)cellDidClick:(TwitterCell *)cell{
+    
+}
+
+///点击了Cell菜单
+- (void)cellDidClickMenu:(TwitterCell *)cell{
+    
+}
+
+///点击了展开收起按钮
+- (void)cellDidClickExpendButton:(TwitterCell *)cell{
+    
+}
+
+///点击了视频
+- (void)cellDidClickedVideo:(TwitterCell *)cell{
+    
+}
+
+///点击了关注
+- (void)cellDidClickFollow:(TwitterCell *)cell{
+    
+}
+
+///点击了转发
+- (void)cellDidClickRepost:(TwitterCell *)cell{
+    
+}
+
+//点击了点赞的昵称
+- (void)cellDidClickedLikedUser:(TweetLikeModel *)userModel{
+    
+}
+
+///点击了评论的昵称
+- (void)cellDidClickedCommentUser:(TweetCommentModel *)userModel{
+    
+}
+
+///点击了回复人的昵称
+- (void)cellDidClickedReplyUser:(NSString *)memberId{
+    
+}
+
+///点击了下方 Tag
+- (void)cellDidClickTag:(TwitterCell *)cell{
+    
+}
+
+///点击了评论
+- (void)cellDidClickComment:(TwitterCell *)cell{
+    
+}
+
+///评论评论中的内容
+- (void)cellDidClickedCommentListCell:(TwitterCell *)cell commentIndex:(NSInteger)index{
+    
+}
+
+///点击了赞
+- (void)cellDidClickLike:(TwitterCell *)cell{
+    
+}
+
+///点击了用户
+- (void)cell:(TwitterCell *)cell didClickUser:(MLTweetModel *)user{
+    
+}
+
+///点击了图片
+- (void)cell:(TwitterCell *)cell didClickImageAtIndex:(NSUInteger)index{
+    
+}
+
+///点击了 Label 的链接
+- (void)cell:(TwitterCell *)cell didClickInLabel:(YYLabel *)label textRange:(NSRange)textRange{
+    
+}
+
 #pragma mark - Setter && Getter
 - (NSMutableArray *)layoutsArray{
     if (!_layoutsArray) {
