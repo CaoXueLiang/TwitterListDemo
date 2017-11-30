@@ -64,20 +64,18 @@
      NSMutableAttributedString *commentStr;
     if ([_commentModel.is_replay isEqualToString:@"N"]) {
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: ",_commentModel.nick_name]];
-        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
+        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
         
         
     //回复的是用户
     }else if ([_commentModel.is_replay isEqualToString:@"Y"]){
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@回复%@: ",_commentModel.nick_name,_commentModel.re_nick_name]];
-        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
+        NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
     
     }
     
-    commentStr.yy_color = [UIColor blackColor];
-    commentStr.yy_font = [UIFont systemFontOfSize:15];
     commentStr.yy_lineBreakMode = NSLineBreakByCharWrapping;
     [commentStr yy_setColor:RGBMAIN range:NSMakeRange(0, _commentModel.nick_name.length)];
     
@@ -133,20 +131,18 @@
     NSMutableAttributedString *commentStr;
     if ([model.is_replay isEqualToString:@"N"]) {
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: ",model.nick_name]];
-        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
+        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
         
         
     //回复的是用户
     }else if ([model.is_replay isEqualToString:@"Y"]){
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@回复%@: ",model.nick_name,model.re_nick_name]];
-        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
+        NSMutableAttributedString *emotionString = [model.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
         
     }
     
-    commentStr.yy_color = [UIColor blackColor];
-    commentStr.yy_font = [UIFont systemFontOfSize:15];
     commentStr.yy_lineBreakMode = NSLineBreakByCharWrapping;
     [commentStr yy_setColor:RGBMAIN range:NSMakeRange(0, model.nick_name.length + 1)];
     

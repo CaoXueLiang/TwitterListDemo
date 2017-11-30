@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface NSString (Emotion)
-/// 将字符串转化为表情
-- (NSMutableAttributedString *)convertToEmotionWithFont:(UIFont *)font;
+/// 将字符串转化为表情,匹配URL,匹配电话号码
+- (NSMutableAttributedString *)convertToEmotionWithFont:(UIFont *)font normalColor:(UIColor *)color;
 @end

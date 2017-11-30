@@ -42,12 +42,21 @@
     _nameLabel.size = CGSizeMake(kWBCellNameWidth, 24);
     _nameLabel.left = _avatarView.right + kWBCellNamePaddingLeft;
     _nameLabel.centerY = 27;
+    _nameLabel.displaysAsynchronously = NO;
+    _nameLabel.ignoreCommonProperties = YES;
+    _nameLabel.fadeOnAsynchronouslyDisplay = NO;
+    _nameLabel.fadeOnHighlight = NO;
     _nameLabel.lineBreakMode = NSLineBreakByClipping;
+    _nameLabel.textVerticalAlignment = YYTextVerticalAlignmentCenter;
     [self addSubview:_nameLabel];
     
     _locationLabel = [YYLabel new];
     _locationLabel.frame = _nameLabel.frame;
     _locationLabel.centerY = 47;
+    _locationLabel.displaysAsynchronously = NO;
+    _locationLabel.ignoreCommonProperties = YES;
+    _locationLabel.fadeOnAsynchronouslyDisplay = NO;
+    _locationLabel.fadeOnHighlight = NO;
     [self addSubview:_locationLabel];
     _locationLabel.highlightTapAction = ^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
         if ([weak_self.cell.delegate respondsToSelector:@selector(cell: didClickInLabel: textRange:)]) {
@@ -164,16 +173,31 @@
     
     _repostLabel = [YYLabel new];
     _repostLabel.userInteractionEnabled = NO;
+    _repostLabel.textVerticalAlignment = YYTextVerticalAlignmentCenter;
+    _repostLabel.displaysAsynchronously = NO;
+    _repostLabel.ignoreCommonProperties = YES;
+    _repostLabel.fadeOnHighlight = NO;
+    _repostLabel.fadeOnAsynchronouslyDisplay = NO;
     _repostLabel.height = self.height;
     [_repostButton addSubview:_repostLabel];
     
     _commentLabel = [YYLabel new];
     _commentLabel.userInteractionEnabled = NO;
+    _commentLabel.textVerticalAlignment = YYTextVerticalAlignmentCenter;
+    _commentLabel.displaysAsynchronously = NO;
+    _commentLabel.ignoreCommonProperties = YES;
+    _commentLabel.fadeOnHighlight = NO;
+    _commentLabel.fadeOnAsynchronouslyDisplay = NO;
     _commentLabel.height = self.height;
     [_commentButton addSubview:_commentLabel];
     
     _likeLabel = [YYLabel new];
     _likeLabel.userInteractionEnabled = NO;
+    _likeLabel.textVerticalAlignment = YYTextVerticalAlignmentCenter;
+    _likeLabel.displaysAsynchronously = NO;
+    _likeLabel.ignoreCommonProperties = YES;
+    _likeLabel.fadeOnHighlight = NO;
+    _likeLabel.fadeOnAsynchronouslyDisplay = NO;
     _likeLabel.height = self.height;
     [_likeButton addSubview:_likeLabel];
     
@@ -287,6 +311,10 @@
     _likeUsersLabel.left = 8 + 20;
     _likeUsersLabel.width = kWBCellContentWidth - 8 - 10 - 20;
     _likeUsersLabel.textVerticalAlignment = YYTextVerticalAlignmentTop;
+    _likeUsersLabel.displaysAsynchronously = NO;
+    _likeUsersLabel.ignoreCommonProperties = YES;
+    _likeUsersLabel.fadeOnAsynchronouslyDisplay = NO;
+    _likeUsersLabel.fadeOnHighlight = NO;
     [self addSubview:_likeUsersLabel];
     
     _commentTable = [YYTableView new];
@@ -417,6 +445,10 @@
     _timeLabel.size = CGSizeMake(80, 24);
     _timeLabel.right = self.width - 20 - 15;
     _timeLabel.centerY = 18;
+    _timeLabel.displaysAsynchronously = NO;
+    _timeLabel.ignoreCommonProperties = YES;
+    _timeLabel.fadeOnAsynchronouslyDisplay = NO;
+    _timeLabel.fadeOnHighlight = NO;
     [_contentView addSubview:_timeLabel];
     
     _textLabel = [YYLabel new];
@@ -615,9 +647,9 @@
                     //@strongify(imageView);
                     if (!imageView) return;
                     if (image && stage == YYWebImageStageFinished) {
-                                          
-                      int width = pic.ico_width;
-                      int height = pic.ico_height;
+                        ///防止出现分母为0，出现崩溃
+                        int width = pic.ico_width ? : 1;
+                        int height = pic.ico_height ? : 1;
                       CGFloat scale = (height / width) / (imageView.height / imageView.width);
                       if (scale < 0.99 || isnan(scale)) { // 宽图把左右两边裁掉
                       imageView.contentMode = UIViewContentModeScaleAspectFill;

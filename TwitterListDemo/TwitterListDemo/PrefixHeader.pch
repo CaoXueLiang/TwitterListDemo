@@ -84,5 +84,6 @@
 #define kWBLinkTagName @"tag" //WBTag
 #define kWBLinkTopicName @"topic" //WBTopic
 #define kWBLinkAtName @"at" //NSString
+#define KWBLinkPhone @"phoneNumber" //电话号码
 
 #endif /* PrefixHeader_pch */

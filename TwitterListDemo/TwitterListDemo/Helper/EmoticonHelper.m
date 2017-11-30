@@ -32,18 +32,37 @@
     return bundle;
 }
 
++ (YYMemoryCache *)imageCache {
+    static YYMemoryCache *cache;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cache = [YYMemoryCache new];
+        cache.shouldRemoveAllObjectsOnMemoryWarning = NO;
+        cache.shouldRemoveAllObjectsWhenEnteringBackground = NO;
+        cache.name = @"WeiboImageCache";
+    });
+    return cache;
+}
+
 + (UIImage *)imageNamed:(NSString *)name {
+    if (!name) return nil;
+    UIImage *image = [[self imageCache] objectForKey:name];
+    if (image) return image;
     NSString *ext = name.pathExtension;
     if (ext.length == 0) ext = @"png";
     NSString *path = [[self bundle] pathForScaledResource:name ofType:ext];
     if (!path) return nil;
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
+    image = [UIImage imageWithContentsOfFile:path];
+    image = [image yy_imageByDecoded];
+    if (!image) return nil;
+    [[self imageCache] setObject:image forKey:name];
     return image;
 }
 
 + (UIImage *)imageWithPath:(NSString *)path {
     if (!path) return nil;
-    UIImage *image;
+    UIImage *image = [[self imageCache] objectForKey:path];
+    if (image) return image;
     if (path.pathScale == 1) {
         // 查找 @2x @3x 的图片
         NSArray *scales = [NSBundle preferredScales];
@@ -54,7 +73,29 @@
     } else {
         image = [UIImage imageWithContentsOfFile:path];
     }
+    if (image) {
+        image = [image yy_imageByDecoded];
+        [[self imageCache] setObject:image forKey:path];
+    }
     return image;
+}
+
++ (NSRegularExpression *)regexURL{
+    static NSRegularExpression *regex;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        regex = [NSRegularExpression regularExpressionWithPattern: @"((http|ftp|https)://)?(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?" options:kNilOptions error:NULL];
+    });
+    return regex;
+}
+
++ (NSRegularExpression *)regexPhone{
+    static NSRegularExpression *regex;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        regex = [NSRegularExpression regularExpressionWithPattern: @"1[3578][0-9]{9}" options:kNilOptions error:NULL];
+    });
+    return regex;
 }
 
 + (NSRegularExpression *)regexAt {

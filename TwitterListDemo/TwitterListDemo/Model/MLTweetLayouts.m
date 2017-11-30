@@ -522,37 +522,10 @@
             [string insertString:insert atIndex:0];
         }
     }
-    // 字体
+    
     UIFont *font = [UIFont systemFontOfSize:fontSize];
-    // 高亮状态的背景
-    YYTextBorder *highlightBorder = [YYTextBorder new];
-    highlightBorder.insets = UIEdgeInsetsMake(-2, 0, -2, 0);
-    highlightBorder.cornerRadius = 3;
-    highlightBorder.fillColor = kWBCellTextHighlightBackgroundColor;
-    
-    NSMutableAttributedString *text = [string convertToEmotionWithFont:[UIFont systemFontOfSize:15]];
-    
-    text.yy_font = font;
-    text.yy_color = textColor;
-     
-//     // 匹配URL
-//     NSArray *atResults = [[WBStatusHelper regexURL] matchesInString:text.string options:kNilOptions range:text.yy_rangeOfAll];
-//     for (NSTextCheckingResult *at in atResults) {
-//     if (at.range.location == NSNotFound && at.range.length <= 1) continue;
-//     if ([text yy_attribute:YYTextHighlightAttributeName atIndex:at.range.location] == nil) {
-//     [text yy_setColor:kWBCellTextHighlightColor range:at.range];
-    
-     // 高亮状态
-     YYTextHighlight *highlight = [YYTextHighlight new];
-     [highlight setBackgroundBorder:highlightBorder];
-         
-//     // 数据信息，用于稍后用户点击
-//     highlight.userInfo = @{kWBLinkURLName : [text.string substringWithRange:NSMakeRange(at.range.location, at.range.length)]};
-//     [text yy_setTextHighlight:highlight range:at.range];
-//
-  //  }
-  //}
-    return text;
+    NSMutableAttributedString *tmpString = [string convertToEmotionWithFont:font normalColor:textColor];
+    return tmpString;
 }
 
 
