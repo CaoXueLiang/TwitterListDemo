@@ -66,14 +66,14 @@
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@: ",_commentModel.nick_name]];
         NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
-        
+        commentStr.yy_font = [UIFont systemFontOfSize:16];
         
     //回复的是用户
     }else if ([_commentModel.is_replay isEqualToString:@"Y"]){
         commentStr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@回复%@: ",_commentModel.nick_name,_commentModel.re_nick_name]];
         NSMutableAttributedString *emotionString = [_commentModel.comment convertToEmotionWithFont:[UIFont systemFontOfSize:16] normalColor:kWBCellTextNormalColor];
         [commentStr appendAttributedString:emotionString];
-    
+        commentStr.yy_font = [UIFont systemFontOfSize:16];
     }
     
     commentStr.yy_lineBreakMode = NSLineBreakByCharWrapping;
@@ -143,6 +143,7 @@
         
     }
     
+    commentStr.yy_font = [UIFont systemFontOfSize:16];
     commentStr.yy_lineBreakMode = NSLineBreakByCharWrapping;
     [commentStr yy_setColor:RGBMAIN range:NSMakeRange(0, model.nick_name.length + 1)];
     
