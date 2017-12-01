@@ -314,7 +314,6 @@
     if (_isDetail) {
         _isShowExpendButton = NO;
     }else{
-    
         //判断是否隐藏展开按钮
         if (rowCount > 6) {
             _isShowExpendButton = YES;
@@ -329,7 +328,6 @@
         }else{
             _isShowExpendButton = NO;
         }
-    
     }
     
     _textLayout = [YYTextLayout layoutWithContainer:container text:text];
@@ -449,7 +447,6 @@
 
 //布局评论的列表
 - (void)_layoutCommentList{
-    
     _commentHeight = 0;
     _commentHeight = [self commentListViewHeightWithTweet:_tweetModel];
     

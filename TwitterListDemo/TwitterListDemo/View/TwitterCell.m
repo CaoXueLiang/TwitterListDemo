@@ -507,7 +507,7 @@
     
     _toolbarView = [TwitterToolbarView new];
     [_contentView addSubview:_toolbarView];
-
+    
     return self;
 }
 

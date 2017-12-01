@@ -205,6 +205,7 @@
         _myTable.backgroundColor = [UIColor groupTableViewBackgroundColor];
         _myTable.showsVerticalScrollIndicator = NO;
         _myTable.tableFooterView = [UIView new];
+        _myTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _myTable;
 }
